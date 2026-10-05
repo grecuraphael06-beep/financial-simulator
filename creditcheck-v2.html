@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CreditCheck România — Simulator de credite</title>
+<style>
+:root{--navy:#0b2545;--navy2:#13315c;--gold:#a8842c;--bg:#f3f4f6;--text:#1b2433;--muted:#5d6878;--border:#cfd6e0;--green:#13795b;--red:#b42318;--yellow:#9a5b00}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+h1,h2,.brand{font-family:Georgia,"Times New Roman",serif}
+button,input,select{font:inherit}
+.container{width:min(1200px,calc(100% - 32px));margin:auto}
+.top{background:var(--navy);color:#fff;border-bottom:4px solid var(--gold)}
+.top-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.brand{font-size:22px;font-weight:700;letter-spacing:.2px}
+.brand small{display:block;font:12px "Segoe UI",Arial,sans-serif;color:#b9c6dc;letter-spacing:.3px;margin-top:2px}
+.meta{font-size:13px;color:#d6deec;display:flex;gap:22px;flex-wrap:wrap}
+.meta b{color:#fff}
+main{padding:30px 0 60px}
+.hero h1{margin:0 0 6px;font-size:30px;color:var(--navy)}
+.hero p{margin:0;color:var(--muted);max-width:780px}
+.tabs{display:flex;gap:0;margin:22px 0;border-bottom:2px solid var(--border)}
+.tab{border:0;background:transparent;padding:12px 22px;cursor:pointer;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab.active{color:var(--navy);border-bottom-color:var(--gold)}
+.layout{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start}
+.card{background:#fff;border:1px solid var(--border);border-radius:4px}
+.form-card{padding:22px;position:sticky;top:16px}
+.section-title{font-size:17px;margin:0 0 18px;padding-bottom:10px;border-bottom:1px solid var(--border);color:var(--navy)}
+.field{margin-bottom:16px}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.help{font-size:12px;color:var(--muted);margin-top:5px}
+.input-wrap{position:relative}
+input,select{width:100%;min-height:44px;border:1px solid #aeb8c7;border-radius:3px;padding:0 12px;background:#fff;color:var(--text);outline:none}
+input:focus,select:focus{border-color:var(--navy2);box-shadow:0 0 0 3px rgba(19,49,92,.15)}
+.suffix{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cur-row{display:grid;grid-template-columns:1fr 92px;gap:8px}
+.result-card{padding:24px}
+.main-result{background:#eef2f8;border-left:4px solid var(--navy2);padding:18px 20px;margin-bottom:18px}
+.main-result small{color:var(--muted);font-weight:600}
+.main-result strong{display:block;font:700 36px Georgia,serif;color:var(--navy);margin-top:4px}
+.eq{font-size:12px;color:var(--muted);margin-top:2px;font-weight:400}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric{border:1px solid var(--border);padding:14px}
+.metric small{color:var(--muted);display:block;margin-bottom:5px;font-size:12px}
+.metric strong{font-size:18px}
+.good{color:var(--green)}.warning{color:var(--yellow)}.danger{color:var(--red)}
+.alert{display:none;margin-bottom:16px;padding:12px 14px;border-left:4px solid var(--red);background:#fdeceb;color:#8f1d14;font-size:13px}
+.alert.show{display:block}
+.alert.note{border-left-color:var(--yellow);background:#fff6e5;color:var(--yellow)}
+.comparison{margin-top:24px;padding:22px}
+.comparison-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.comparison-header h2{margin:0;font-size:19px;color:var(--navy)}
+.filters{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.filters button{border:1px solid var(--border);background:#fff;padding:7px 12px;border-radius:3px;cursor:pointer;font-size:12px}
+.filters button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+th{background:#eef2f8;text-align:left;padding:10px 12px;font-size:12px;color:var(--navy);border-bottom:2px solid var(--navy2);white-space:nowrap}
+td{padding:12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafbfd}
+.bank-name{font-weight:700;color:var(--navy)}
+.sub{font-size:11px;color:var(--muted);margin-top:3px;font-weight:400}
+.sub.w{color:var(--yellow)}.sub.r{color:var(--red)}
+td a{color:var(--navy2)}
+.empty{padding:22px;border:1px dashed var(--border);text-align:center;color:var(--muted)}
+.info{margin-top:24px;padding:18px;background:#fff;border:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.65}
+.info strong{color:var(--text)}
+footer{background:var(--navy);color:#b9c6dc;font-size:12px;padding:20px 0;border-top:4px solid var(--gold)}
+.hidden{display:none!important}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.form-card{position:static}}
+@media(max-width:600px){.container{width:calc(100% - 20px)}.hero h1{font-size:24px}.result-grid{grid-template-columns:1fr 1fr}.main-result strong{font-size:30px}.tab{padding:12px 14px}}
+</style>
+</head>
+<body>
+<div class="top"><div class="container top-inner">
+  <div class="brand">CreditCheck România<small>Simulator informativ de credite ipotecare și de nevoi personale</small></div>
+  <div class="meta"><span>IRCC: <b id="metaIrcc"></b></span><span>EUR/RON (BNR): <b id="metaFx"></b></span></div>
+</div></div>
+
+<main><div class="container">
+  <section class="hero">
+    <h1>Simulare credit și comparare oferte bancare</h1>
+    <p>Calculează rata, costul total rambursat și gradul de îndatorare. Prețul locuinței poate fi introdus în euro sau în lei.</p>
+  </section>
+
+  <div class="tabs">
+    <button class="tab active" data-type="mortgage">Credit ipotecar</button>
+    <button class="tab" data-type="consumer">Credit de nevoi personale</button>
+  </div>
+
+  <div class="layout">
+    <section class="card form-card">
+      <h2 class="section-title">Date de intrare</h2>
+
+      <div id="mortgageForm">
+        <div class="field">
+          <label for="propertyPrice">Prețul locuinței</label>
+          <div class="cur-row">
+            <input id="propertyPrice" type="number" min="0" step="1000" value="100000">
+            <select id="priceCur" aria-label="Moneda prețului"><option value="EUR" selected>EUR</option><option value="RON">RON</option></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="downPayment">Avans (în aceeași monedă)</label>
+          <input id="downPayment" type="number" min="0" step="1000" value="20000">
+          <div class="help" id="downPaymentHelp"></div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="income">Venit net lunar</label>
+            <div class="input-wrap"><input id="income" type="number" min="0" step="100" value="10000"><span class="suffix">RON</span></div>
+          </div>
+          <div class="field">
+            <label for="otherRates">Alte rate lunare</label>
+            <div class="input-wrap"><input id="otherRates" type="number" min="0" step="50" value="0"><span class="suffix">RON</span></div>
+          </div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="mortgageYears">Perioada</label>
+            <select id="mortgageYears"><option value="15">15 ani</option><option value="20">20 ani</option><option value="25">25 ani</option><option value="30" selected>30 ani</option></select>
+          </div>
+          <div class="field">
+            <label for="rateType">Tip dobândă</label>
+            <select id="rateType"><option value="fixed">Fixă, apoi variabilă</option><option value="variable">Variabilă (IRCC + marjă)</option></select>
+          </div>
+        </div>
+        <div id="fixedFields" class="two">
+          <div class="field">
+            <label for="initialRate">Dobânda fixă</label>
+            <div class="input-wrap"><input id="initialRate" type="number" min="0" max="30" step="0.01" value="4.99"><span class="suffix">% / an</span></div>
+          </div>
+          <div class="field">
+            <label for="fixedYears">Perioada fixă</label>
+            <div class="input-wrap"><input id="fixedYears" type="number" min="1" max="30" step="1" value="3"><span class="suffix">ani</span></div>
+          </div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="ircc">IRCC</label>
+            <div class="input-wrap"><input id="ircc" type="number" min="0" max="20" step="0.01"><span class="suffix">%</span></div>
+          </div>
+          <div class="field">
+            <label for="margin">Marja băncii</label>
+            <div class="input-wrap"><input id="margin" type="number" min="0" max="15" step="0.01" value="2.30"><span class="suffix">%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="consumerForm" class="hidden">
+        <div class="field">
+          <label for="consumerAmount">Suma dorită</label>
+          <div class="cur-row">
+            <input id="consumerAmount" type="number" min="0" step="500" value="50000">
+            <select id="consumerCur" aria-label="Moneda sumei"><option value="RON" selected>RON</option><option value="EUR">EUR</option></select>
+          </div>
+          <div class="help">Interval acceptat: 1.000 – 250.000 RON (echivalent).</div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="consumerIncome">Venit net lunar</label>
+            <div class="input-wrap"><input id="consumerIncome" type="number" min="0" step="100" value="7000"><span class="suffix">RON</span></div>
+          </div>
+          <div class="field">
+            <label for="consumerOtherRates">Alte rate lunare</label>
+            <div class="input-wrap"><input id="consumerOtherRates" type="number" min="0" step="50" value="0"><span class="suffix">RON</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="consumerYears">Perioada</label>
+          <select id="consumerYears"><option value="1">1 an</option><option value="2">2 ani</option><option value="3">3 ani</option><option value="4">4 ani</option><option value="5" selected>5 ani</option></select>
+        </div>
+        <div class="field">
+          <label for="consumerRate">Dobânda ofertei tale</label>
+          <div class="input-wrap"><input id="consumerRate" type="number" min="0" max="30" step="0.01" value="9.99"><span class="suffix">% / an</span></div>
+          <div class="help">Folosită pentru calculul principal. Comparatorul folosește intervalul publicat de fiecare bancă.</div>
+        </div>
+      </div>
+
+      <div id="fxBox" class="field hidden">
+        <label for="fx">Curs de conversie EUR/RON</label>
+        <div class="input-wrap"><input id="fx" type="number" min="0" step="0.0001"><span class="suffix">RON</span></div>
+        <div class="help" id="fxHelp"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card result-card">
+        <div class="alert" id="alertBox"></div>
+        <div class="main-result">
+          <small id="paymentLabel">Rata lunară estimată</small>
+          <strong id="monthlyPayment">—</strong>
+          <div class="eq" id="monthlyPaymentEq"></div>
+          <div class="help" id="paymentNote"></div>
+        </div>
+        <div class="result-grid">
+          <div class="metric"><small>Suma creditului</small><strong id="loanAmount">—</strong><div class="eq" id="loanAmountEq"></div></div>
+          <div class="metric"><small>Total rambursat</small><strong id="totalCost">—</strong><div class="eq" id="totalCostEq"></div></div>
+          <div class="metric"><small>Dobândă totală</small><strong id="totalInterest">—</strong></div>
+          <div class="metric"><small>Grad de îndatorare</small><strong id="debtRatio">—</strong></div>
+          <div class="metric"><small>LTV</small><strong id="ltv">—</strong></div>
+          <div class="metric"><small>Perioada</small><strong id="periodResult">—</strong></div>
+        </div>
+      </div>
+
+      <div class="card comparison">
+        <div class="comparison-header">
+          <h2>Oferte bancare publicate</h2>
+          <div class="filters">Sortare:
+            <button class="filter active" data-sort="payment">Rată</button>
+            <button class="filter" data-sort="rate">Dobândă</button>
+            <button class="filter" data-sort="total">Total rambursat</button>
+          </div>
+        </div>
+        <div id="bankList"></div>
+      </div>
+
+      <div class="info">
+        <strong>Metodologie.</strong> Rata folosește formula standard de amortizare (rate egale). La dobânda fixă urmată de variabilă, rata de după perioada fixă se recalculează pe soldul rămas, cu IRCC + marjă la valoarea de azi, care se poate modifica trimestrial.
+        <br><br>
+        <strong>Moneda.</strong> Ofertele din registru sunt în lei. Dacă introduci prețul în euro, suma este convertită în lei la cursul din formular, iar creditul se calculează în lei; echivalentul în euro este orientativ. Creditele denominate în euro au condiții proprii (dobândă legată de Euribor, avans în general mai mare pentru cei cu venituri în lei) și nu sunt simulate aici.
+        <br><br>
+        <strong>Ofertele.</strong> Dobânzile afișate sunt cele promoționale, valabile doar pentru profilul descris la fiecare bancă (clasă energetică, avans, încasarea venitului, asigurare). Fiecare linie arată sursa și luna datelor. „Total rambursat” = rate × luni și nu include asigurări, comisioane de analiză, evaluare sau administrare, deci nu este DAE.
+        <br><br>
+        <strong>Îndatorare.</strong> Pragurile de culoare (40% / 45%) sunt orientative; limitele reale depind de bancă, tipul creditului și reglementările BNR în vigoare.
+      </div>
+    </section>
+  </div>
+</div></main>
+
+<footer><div class="container">
+  CreditCheck România este un simulator independent cu caracter informativ. Nu reprezintă BNR, ANPC sau o instituție de credit și nu constituie ofertă sau consultanță financiară. Oferta finală, costurile și eligibilitatea sunt stabilite exclusiv de banca finanțatoare.
+</div></footer>
+
+<script>
+/* ============================================================
+   REGISTRU DATE — consultat la 05.10.2026
+   via: "bancă" = pagina băncii; "presă" = presă financiară/comparatoare
+   asOf: luna datelor. Actualizează manual când verifici o ofertă.
+   ============================================================ */
+const DATA = {
+  ircc: { value: 5.57, from: "01.10.2026" },            // BNR, T4 2026
+  fx:   { eurRon: 5.3447, date: "02.10.2026" },          // curs BNR valabil 05.10.2026
+  mortgage: [
+    { bank:"BRD", product:"Habitat (imobil clasa A)", rate:4.65, fixedYears:3, margin:2.10, minDown:20,
+      cond:"Avans ≥ 20%, venit încasat în cont BRD", via:"bancă", asOf:"oct. 2026",
+      url:"https://www.brd.ro/en/individuals/loans/housing-loans/habitat" },
+    { bank:"BCR", product:"Casa Mea Natura", rate:4.79, fixedYears:3, margin:2.10,
+      cond:"Locuință eficientă energetic, venit ≥ 10.000 lei, nivel Max/Max Invest", via:"bancă", asOf:"sept. 2026",
+      url:"https://www.bcr.ro/ro/persoane-fizice/credite/credite-pentru-casa/casa-mea-natura" },
+    { bank:"BCR", product:"Casa Mea", rate:4.99, fixedYears:3, margin:2.30,
+      cond:"Venit ≥ 10.000 lei, nivel Max/Max Invest", via:"bancă", asOf:"sept. 2026",
+      url:"https://www.bcr.ro/ro/persoane-fizice/credite/credite-pentru-casa/casa-mea-bcr" },
+    { bank:"Raiffeisen Bank", product:"Credit imobiliar / refinanțare", rate:4.70, fixedYears:3, margin:1.90,
+      cond:"Imobil clasa energetică A sau refinanțare credit „verde”", via:"presă", asOf:"oct. 2026",
+      url:"https://www.raiffeisen.ro/persoane-fizice/credite/" },
+    { bank:"UniCredit", product:"Credit ipotecar", rate:4.69, fixedYears:2, margin:2.25,
+      cond:"Venit încasat la UniCredit, asigurare de viață", via:"presă", asOf:"iul. 2026",
+      url:"https://www.unicredit.ro/ro/persoane-fizice/Credite/credite-ipoteca.html" },
+    { bank:"ING Bank", product:"Credit ipotecar fix 3 ani", rate:4.79, fixedYears:3, margin:2.49, minDown:15,
+      cond:"Dobânda începe de la 4,79% și crește fără venit la ING; avans ≥ 15%", via:"bancă", asOf:"sept. 2026",
+      url:"https://ing.ro/persoane-fizice/credite/ipotecar" },
+    { bank:"CEC Bank", product:"Casa Mea Verde", rate:4.89, fixedYears:3, margin:2.20,
+      cond:"Virare venit, locuință eficientă energetic", via:"presă", asOf:"aug. 2026",
+      url:"https://www.cec.ro/persoane-fizice/credite" },
+    { bank:"Banca Transilvania", product:"Credit ipotecar fix 3 ani", rate:5.10, fixedYears:3, margin:2.10,
+      cond:"Venit încasat la BT, certificat energetic A", via:"presă", asOf:"sept. 2026",
+      url:"https://www.bancatransilvania.ro/persoane-fizice/credite" },
+    { bank:"Garanti BBVA", product:"Credit ipotecar fix 3 ani", rate:5.79, fixedYears:3, margin:2.25,
+      cond:"Profil VIP / Small, venit virat", via:"presă", asOf:"aug. 2026",
+      url:"https://www.garantibbva.ro/persoane-fizice/" }
+  ],
+  consumer: [
+    { bank:"Raiffeisen Bank", product:"Flexicredit", min:5.55, max:null,
+      cond:"Dobânda minimă, profil eligibil", via:"presă", asOf:"iul. 2026", url:"https://www.raiffeisen.ro/persoane-fizice/credite/" },
+    { bank:"BCR", product:"Credit de nevoi personale", min:5.79, max:14.99,
+      cond:"5,79% condiționat de asigurare BCR și nivel Max; standard de la 6,29%", via:"presă", asOf:"iul. 2026", url:"https://www.bcr.ro/ro/persoane-fizice" },
+    { bank:"BRD", product:"Expresso", min:5.99, max:19.98,
+      cond:"Minim: online, venit în cont, refinanțare, asigurare; standard de la 6,49%", via:"presă", asOf:"iun. 2026", url:"https://www.brd.ro/persoane-fizice/credite" },
+    { bank:"ING Bank", product:"Credit de nevoi personale", min:5.99, max:13.49,
+      cond:"Dobândă fixă pe toată perioada; minim cu venit la ING", via:"presă", asOf:"iun. 2026", url:"https://ing.ro/persoane-fizice/credite" },
+    { bank:"UniCredit", product:"Credit de nevoi personale", min:5.99, max:null,
+      cond:"Dobânda minimă, în cazul refinanțării", via:"presă", asOf:"iul. 2026", url:"https://www.unicredit.ro/ro/persoane-fizice/Credite.html" },
+    { bank:"Banca Transilvania", product:"Credit de nevoi personale", min:6.49, max:null,
+      cond:"Dobânda minimă publicată", via:"presă", asOf:"iul. 2026", url:"https://www.bancatransilvania.ro/persoane-fizice/credite" }
+  ]
+};
+
+/* ============================================================
+   UTILITARE
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const nf = new Intl.NumberFormat("ro-RO", { maximumFractionDigits: 0 });
+const money = v => nf.format(Math.round(Number.isFinite(v) ? v : 0)) + " RON";
+const eurTxt = (v, fx) => fx > 0 ? "≈ " + nf.format(Math.round(v / fx)) + " EUR" : "";
+const pct = (v, d = 2) => v.toFixed(d).replace(".", ",") + "%";
+const num = id => { const v = parseFloat($(id).value); return Number.isFinite(v) ? Math.max(0, v) : 0; };
+const cls = r => r <= 40 ? "good" : r <= 45 ? "warning" : "danger";
+
+/* ============================================================
+   CALCUL
+   ============================================================ */
+function monthlyPayment(P, annualRate, months){
+  P = Math.max(0, P); months = Math.max(1, months);
+  if(P === 0) return 0;
+  const i = Math.max(0, annualRate) / 1200;
+  if(i === 0) return P / months;
+  const f = Math.pow(1 + i, months);
+  return P * i * f / (f - 1);
+}
+
+function balanceAfter(P, rate, months, k){
+  const i = rate / 1200;
+  if(i === 0) return P - (P / months) * k;
+  const pmt = monthlyPayment(P, rate, months);
+  const f = Math.pow(1 + i, k);
+  return P * f - pmt * (f - 1) / i;
+}
+
+function twoPhase(loan, fixedRate, fixedYears, floatRate, years){
+  const n = years * 12;
+  const k = Math.min(Math.max(0, fixedYears), years) * 12;
+  if(k === 0){ const p = monthlyPayment(loan, floatRate, n); return { payment:p, laterPayment:null, total:p*n }; }
+  const p1 = monthlyPayment(loan, fixedRate, n);
+  if(k >= n) return { payment:p1, laterPayment:null, total:p1*n };
+  const p2 = monthlyPayment(balanceAfter(loan, fixedRate, n, k), floatRate, n - k);
+  return { payment:p1, laterPayment:p2, total:p1*k + p2*(n - k) };
+}
+
+/* ============================================================
+   UI
+   ============================================================ */
+let currentType = "mortgage";
+let currentSort = "payment";
+
+function showAlert(list, note){
+  const b = $("alertBox");
+  b.className = "alert" + (list.length ? " show" : "") + (note ? " note" : "");
+  b.innerHTML = list.join("<br>");
+}
+
+function clearResults(){
+  ["monthlyPayment","loanAmount","totalCost","totalInterest","debtRatio","ltv","periodResult"]
+    .forEach(id => { $(id).textContent = "—"; $(id).className = ""; });
+  ["monthlyPaymentEq","loanAmountEq","totalCostEq","paymentNote"].forEach(id => $(id).textContent = "");
+}
+
+function setResults(o, fx){
+  $("paymentLabel").textContent = o.label;
+  $("monthlyPayment").textContent = money(o.payment);
+  $("monthlyPaymentEq").textContent = eurTxt(o.payment, fx) + (fx > 0 ? " / lună" : "");
+  $("paymentNote").textContent = o.note || "";
+  $("loanAmount").textContent = money(o.loan);
+  $("loanAmountEq").textContent = eurTxt(o.loan, fx);
+  $("totalCost").textContent = money(o.total);
+  $("totalCostEq").textContent = eurTxt(o.total, fx);
+  $("totalInterest").textContent = money(Math.max(0, o.total - o.loan));
+  $("debtRatio").textContent = o.ratio === null ? "—" : o.ratio.toFixed(1).replace(".", ",") + "%";
+  $("debtRatio").className = o.ratio === null ? "" : cls(o.ratio);
+  $("ltv").textContent = o.ltv === null ? "—" : o.ltv.toFixed(1).replace(".", ",") + "%";
+  $("periodResult").textContent = o.years + (o.years === 1 ? " an" : " ani");
+}
+
+function fail(errors){
+  showAlert(errors); clearResults();
+  $("bankList").innerHTML = '<div class="empty">Corectează datele din formular pentru a vedea ofertele.</div>';
+}
+
+/* ============================================================
+   IPOTECAR
+   ============================================================ */
+function calculateMortgage(){
+  const cur = $("priceCur").value, fx = num("fx");
+  const k = cur === "EUR" ? fx : 1;
+  const price = num("propertyPrice") * k, down = num("downPayment") * k;
+  const income = num("income"), other = num("otherRates"), years = num("mortgageYears");
+  const ircc = num("ircc"), margin = num("margin");
+  const isFixed = $("rateType").value === "fixed";
+  const fixedRate = num("initialRate"), fixedYears = Math.round(num("fixedYears"));
+
+  const downPct = price > 0 ? down / price * 100 : 0;
+  $("downPaymentHelp").textContent = pct(downPct, 1) + " din preț" + (cur === "EUR" && fx > 0 ? " · " + money(down) : "");
+
+  const errors = [];
+  if(cur === "EUR" && fx <= 0) errors.push("Introdu cursul EUR/RON.");
+  if(num("propertyPrice") <= 0) errors.push("Introdu prețul locuinței.");
+  if(down >= price && price > 0) errors.push("Avansul trebuie să fie mai mic decât prețul locuinței.");
+  if(isFixed && (fixedYears < 1 || fixedYears > years)) errors.push("Perioada fixă trebuie să fie între 1 și " + years + " ani.");
+  if(isFixed && fixedRate <= 0) errors.push("Introdu dobânda fixă.");
+  if(ircc + margin <= 0) errors.push("Introdu IRCC și marja băncii.");
+  if(errors.length) return fail(errors);
+
+  const loan = price - down, floatRate = ircc + margin;
+  const r = isFixed
+    ? twoPhase(loan, fixedRate, fixedYears, floatRate, years)
+    : (p => ({ payment:p, laterPayment:null, total:p * years * 12 }))(monthlyPayment(loan, floatRate, years * 12));
+  const worst = Math.max(r.payment, r.laterPayment || 0);
+  const ratio = income > 0 ? (worst + other) / income * 100 : null;
+  const ltv = loan / price * 100;
+
+  let note = "";
+  if(r.laterPayment !== null) note = "Primii " + fixedYears + " ani. Apoi: " + money(r.laterPayment) + "/lună, la IRCC + marjă de azi (" + pct(floatRate) + ").";
+  else if(!isFixed) note = "Dobândă variabilă " + pct(floatRate) + " (IRCC " + pct(ircc) + " + marjă " + pct(margin) + ").";
+
+  const warns = [];
+  if(income <= 0) warns.push("Introdu venitul net pentru a calcula gradul de îndatorare.");
+  if(ltv > 85) warns.push("LTV peste 85%: verifică la bancă avansul minim cerut.");
+  showAlert(warns, true);
+
+  setResults({ label: r.laterPayment !== null ? "Rata lunară în perioada fixă" : "Rata lunară estimată",
+    payment:r.payment, note, loan, total:r.total, ratio, ltv, years }, fx > 0 ? fx : DATA.fx.eurRon);
+
+  const rows = DATA.mortgage.map(b => {
+    const fl = ircc + b.margin;
+    const t = twoPhase(loan, b.rate, b.fixedYears, fl, years);
+    const w = Math.max(t.payment, t.laterPayment || 0);
+    return {
+      b, p:t.payment, t:t.total, r:b.rate,
+      rateHtml: pct(b.rate) + " fix " + b.fixedYears + " ani<div class='sub'>apoi IRCC + " + pct(b.margin) + " = " + pct(fl) + "</div>",
+      payHtml: money(t.payment) + (t.laterPayment !== null ? "<div class='sub'>apoi " + money(t.laterPayment) + "</div>" : ""),
+      totHtml: money(t.total),
+      dti: income > 0 ? (w + other) / income * 100 : null,
+      warn: b.minDown && downPct < b.minDown ? "Avansul tău este sub " + b.minDown + "%, cât cere oferta" : ""
+    };
+  });
+  renderBanks(rows);
+}
+
+/* ============================================================
+   NEVOI PERSONALE
+   ============================================================ */
+function calculateConsumer(){
+  const cur = $("consumerCur").value, fx = num("fx");
+  const amount = num("consumerAmount") * (cur === "EUR" ? fx : 1);
+  const income = num("consumerIncome"), other = num("consumerOtherRates");
+  const years = num("consumerYears"), rate = num("consumerRate"), months = years * 12;
+
+  const errors = [];
+  if(cur === "EUR" && fx <= 0) errors.push("Introdu cursul EUR/RON.");
+  else if(amount < 1000 || amount > 250000) errors.push("Suma trebuie să fie între 1.000 și 250.000 RON (echivalent).");
+  if(rate <= 0) errors.push("Introdu dobânda ofertei tale.");
+  if(errors.length) return fail(errors);
+
+  const payment = monthlyPayment(amount, rate, months);
+  const ratio = income > 0 ? (payment + other) / income * 100 : null;
+  showAlert(income <= 0 ? ["Introdu venitul net pentru a calcula gradul de îndatorare."] : [], true);
+  setResults({ label:"Rata lunară estimată", payment, note:"Dobândă fixă " + pct(rate) + " pe " + years + (years === 1 ? " an." : " ani."),
+    loan:amount, total:payment * months, ratio, ltv:null, years }, fx > 0 ? fx : DATA.fx.eurRon);
+
+  const rows = DATA.consumer.map(b => {
+    const pMin = monthlyPayment(amount, b.min, months);
+    const pMax = b.max !== null ? monthlyPayment(amount, b.max, months) : null;
+    return {
+      b, p:pMin, t:pMin * months, r:b.min,
+      rateHtml: "de la " + pct(b.min) + (b.max !== null ? "<div class='sub'>până la " + pct(b.max) + "</div>" : ""),
+      payHtml: money(pMin) + (pMax !== null ? "<div class='sub'>până la " + money(pMax) + "</div>" : ""),
+      totHtml: money(pMin * months) + (pMax !== null ? "<div class='sub'>până la " + money(pMax * months) + "</div>" : ""),
+      dti: income > 0 ? ((pMax ?? pMin) + other) / income * 100 : null,
+      warn: ""
+    };
+  });
+  renderBanks(rows);
+}
+
+/* ============================================================
+   TABEL OFERTE
+   ============================================================ */
+function renderBanks(rows){
+  const key = { payment:"p", total:"t", rate:"r" }[currentSort];
+  rows.sort((a, b) => a[key] - b[key]);
+  const body = rows.map(x => `
+    <tr>
+      <td>
+        <div class="bank-name">${x.b.bank}</div>
+        <div>${x.b.product}</div>
+        <div class="sub">${x.b.cond}</div>
+        ${x.warn ? `<div class="sub r">${x.warn}</div>` : ""}
+      </td>
+      <td>${x.rateHtml}</td>
+      <td>${x.payHtml}</td>
+      <td>${x.totHtml}</td>
+      <td>${x.dti !== null ? `<span class="${cls(x.dti)}">${x.dti.toFixed(1).replace(".", ",")}%</span>` : "—"}</td>
+      <td>
+        <a href="${x.b.url}" target="_blank" rel="noopener noreferrer">${x.b.via === "bancă" ? "Pagina băncii" : "Sursă publică"}</a>
+        <div class="sub ${x.b.via === "bancă" ? "" : "w"}">${x.b.via === "bancă" ? "date bancă" : "presă financiară"} · ${x.b.asOf}</div>
+      </td>
+    </tr>`).join("");
+  $("bankList").innerHTML = `<div class="tablewrap"><table>
+    <thead><tr><th>Bancă și produs</th><th>Dobândă</th><th>Rată lunară</th><th>Total rambursat</th><th>Îndatorare</th><th>Sursă</th></tr></thead>
+    <tbody>${body}</tbody></table></div>`;
+}
+
+/* ============================================================
+   EVENIMENTE
+   ============================================================ */
+function updateFxBox(){
+  const cur = currentType === "mortgage" ? $("priceCur").value : $("consumerCur").value;
+  $("fxBox").classList.toggle("hidden", cur !== "EUR");
+}
+
+function calculate(){
+  updateFxBox();
+  currentType === "mortgage" ? calculateMortgage() : calculateConsumer();
+}
+
+document.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  currentType = btn.dataset.type;
+  $("mortgageForm").classList.toggle("hidden", currentType !== "mortgage");
+  $("consumerForm").classList.toggle("hidden", currentType !== "consumer");
+  calculate();
+}));
+
+$("rateType").addEventListener("change", function(){
+  $("fixedFields").classList.toggle("hidden", this.value !== "fixed");
+});
+
+document.querySelectorAll(".filter").forEach(btn => btn.addEventListener("click", () => {
+  document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  currentSort = btn.dataset.sort;
+  calculate();
+}));
+
+document.querySelectorAll("input,select").forEach(el => {
+  el.addEventListener("input", calculate);
+  el.addEventListener("change", calculate);
+});
+
+/* ============================================================
+   START
+   ============================================================ */
+$("ircc").value = DATA.ircc.value;
+$("fx").value = DATA.fx.eurRon;
+$("metaIrcc").textContent = pct(DATA.ircc.value) + " (din " + DATA.ircc.from + ")";
+$("metaFx").textContent = DATA.fx.eurRon.toString().replace(".", ",") + " (" + DATA.fx.date + ")";
+$("fxHelp").textContent = "Curs BNR din " + DATA.fx.date + ", valabil 05.10.2026. Poți introduce cursul băncii.";
+calculate();
+</script>
+</body>
+</html>
