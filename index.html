@@ -1,0 +1,508 @@
+```html
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Simulator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #17202a;
+      line-height: 1.5;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 28px 20px;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    header h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: #cbd5e1;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
+
+    .card h2 {
+      margin-bottom: 20px;
+      font-size: 21px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 9px;
+      background: #2563eb;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .result-box {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 18px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .result-box small {
+      color: #64748b;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .result-box strong {
+      font-size: 22px;
+    }
+
+    .scenario {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .scenario-box {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .scenario-box h3 {
+      margin-bottom: 12px;
+    }
+
+    .highlight {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .difference {
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .grid,
+      .results,
+      .scenario {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Financial Simulator</h1>
+    <p>Vezi cum poate evolua situația ta financiară în timp.</p>
+  </div>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>1. Situația ta financiară</h2>
+
+    <div class="grid">
+
+      <div>
+        <label for="income">Venit lunar (RON)</label>
+        <input id="income" type="number" value="10000">
+      </div>
+
+      <div>
+        <label for="expenses">Cheltuieli lunare (RON)</label>
+        <input id="expenses" type="number" value="6000">
+      </div>
+
+      <div>
+        <label for="savings">Economii existente (RON)</label>
+        <input id="savings" type="number" value="50000">
+      </div>
+
+      <div>
+        <label for="investments">Investiții existente (RON)</label>
+        <input id="investments" type="number" value="20000">
+      </div>
+
+      <div>
+        <label for="debts">Datorii / credite (RON)</label>
+        <input id="debts" type="number" value="30000">
+      </div>
+
+      <div>
+        <label for="monthlyInvestment">Investiție lunară (RON)</label>
+        <input id="monthlyInvestment" type="number" value="2000">
+      </div>
+
+      <div>
+        <label for="returnRate">Randament anual estimat (%)</label>
+        <input id="returnRate" type="number" value="7" step="0.1">
+      </div>
+
+      <div>
+        <label for="inflation">Inflație anuală (%)</label>
+        <input id="inflation" type="number" value="3" step="0.1">
+      </div>
+
+      <div>
+        <label for="age">Vârsta actuală</label>
+        <input id="age" type="number" value="30">
+      </div>
+
+      <div>
+        <label for="targetAge">Vârsta țintă</label>
+        <input id="targetAge" type="number" value="50">
+      </div>
+
+    </div>
+
+    <button onclick="calculate()">Calculează situația mea</button>
+  </section>
+
+
+  <section class="card">
+    <h2>2. Situația actuală</h2>
+
+    <div class="results">
+
+      <div class="result-box">
+        <small>Avere netă</small>
+        <strong id="netWorth">0 RON</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Economisire lunară</small>
+        <strong id="monthlySaving">0 RON</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Rata de economisire</small>
+        <strong id="savingRate">0%</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Fond de urgență</small>
+        <strong id="emergencyFund">0 luni</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Capital investibil</small>
+        <strong id="capital">0 RON</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Raport datorii / venit</small>
+        <strong id="debtRatio">0%</strong>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="card">
+    <h2>3. Proiecția financiară</h2>
+
+    <div class="results">
+
+      <div class="result-box">
+        <small>Peste 5 ani</small>
+        <strong id="fiveYears">0 RON</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Peste 10 ani</small>
+        <strong id="tenYears">0 RON</strong>
+      </div>
+
+      <div class="result-box">
+        <small>La vârsta țintă</small>
+        <strong id="targetResult">0 RON</strong>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="card">
+    <h2>4. Ce se întâmplă dacă...?</h2>
+
+    <p style="margin-bottom:20px;">
+      Comparăm situația actuală cu un scenariu în care investești
+      cu 1.000 RON mai mult în fiecare lună.
+    </p>
+
+    <div class="scenario">
+
+      <div class="scenario-box">
+        <h3>Scenariul actual</h3>
+
+        <div class="highlight" id="scenarioCurrent">
+          0 RON
+        </div>
+
+        <p>
+          Investiție lunară:
+          <strong id="currentMonthly">0 RON</strong>
+        </p>
+      </div>
+
+      <div class="scenario-box">
+        <h3>+1.000 RON / lună</h3>
+
+        <div class="highlight" id="scenarioPlus">
+          0 RON
+        </div>
+
+        <p>
+          Investiție lunară:
+          <strong id="plusMonthly">0 RON</strong>
+        </p>
+
+        <p class="difference" id="difference">
+          Diferență: 0 RON
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  Financial Simulator — versiune experimentală.
+  Calculele au scop informativ și nu reprezintă consultanță financiară.
+</footer>
+
+
+<script>
+
+function formatRON(number) {
+  return new Intl.NumberFormat("ro-RO", {
+    maximumFractionDigits: 0
+  }).format(Math.round(number)) + " RON";
+}
+
+
+function calculateFutureValue(
+  initialCapital,
+  monthlyInvestment,
+  annualReturn,
+  years
+) {
+
+  const months = years * 12;
+  const monthlyRate = annualReturn / 100 / 12;
+
+  let value = initialCapital;
+
+  for (let i = 0; i < months; i++) {
+    value = value * (1 + monthlyRate);
+    value += monthlyInvestment;
+  }
+
+  return value;
+}
+
+
+function calculate() {
+
+  const income =
+    Number(document.getElementById("income").value) || 0;
+
+  const expenses =
+    Number(document.getElementById("expenses").value) || 0;
+
+  const savings =
+    Number(document.getElementById("savings").value) || 0;
+
+  const investments =
+    Number(document.getElementById("investments").value) || 0;
+
+  const debts =
+    Number(document.getElementById("debts").value) || 0;
+
+  const monthlyInvestment =
+    Number(document.getElementById("monthlyInvestment").value) || 0;
+
+  const returnRate =
+    Number(document.getElementById("returnRate").value) || 0;
+
+  const age =
+    Number(document.getElementById("age").value) || 0;
+
+  const targetAge =
+    Number(document.getElementById("targetAge").value) || age;
+
+
+  // Situația actuală
+
+  const monthlySaving = income - expenses;
+
+  const netWorth =
+    savings + investments - debts;
+
+  const savingRate =
+    income > 0
+      ? (monthlySaving / income) * 100
+      : 0;
+
+  const emergencyFund =
+    expenses > 0
+      ? savings / expenses
+      : 0;
+
+  const capital =
+    savings + investments;
+
+  const debtRatio =
+    income > 0
+      ? (debts / (income * 12)) * 100
+      : 0;
+
+
+  document.getElementById("netWorth").textContent =
+    formatRON(netWorth);
+
+  document.getElementById("monthlySaving").textContent =
+    formatRON(monthlySaving);
+
+  document.getElementById("savingRate").textContent =
+    savingRate.toFixed(1) + "%";
+
+  document.getElementById("emergencyFund").textContent =
+    emergencyFund.toFixed(1) + " luni";
+
+  document.getElementById("capital").textContent =
+    formatRON(capital);
+
+  document.getElementById("debtRatio").textContent =
+    debtRatio.toFixed(1) + "%";
+
+
+  // Proiecții
+
+  const five =
+    calculateFutureValue(
+      investments,
+      monthlyInvestment,
+      returnRate,
+      5
+    );
+
+  const ten =
+    calculateFutureValue(
+      investments,
+      monthlyInvestment,
+      returnRate,
+      10
+    );
+
+  const targetYears =
+    Math.max(0, targetAge - age);
+
+  const target =
+    calculateFutureValue(
+      investments,
+      monthlyInvestment,
+      returnRate,
+      targetYears
+    );
+
+
+  document.getElementById("fiveYears").textContent =
+    formatRON(five);
+
+  document.getElementById("tenYears").textContent =
+    formatRON(ten);
+
+  document.getElementById("targetResult").textContent =
+    formatRON(target);
+
+
+  // Scenarii
+```
