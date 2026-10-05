@@ -23,31 +23,33 @@
       --accent: #2563eb;
       --accent-dark: #1d4ed8;
       --dark: #111827;
+      --green: #16a34a;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
+      font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
     }
 
-    /* NAVIGATION */
+    /* NAV */
 
     nav {
       height: 72px;
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.94);
       border-bottom: 1px solid var(--border);
-
       display: flex;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
     }
 
     .nav-inner {
@@ -55,7 +57,6 @@
       max-width: 1180px;
       margin: auto;
       padding: 0 24px;
-
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -79,8 +80,12 @@
     }
 
     .nav-links a {
-      text-decoration: none;
       color: inherit;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
     }
 
     /* HERO */
@@ -89,7 +94,6 @@
       max-width: 1180px;
       margin: auto;
       padding: 80px 24px 65px;
-
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 60px;
@@ -97,18 +101,13 @@
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-
+      display: inline-block;
       background: #eff6ff;
       color: var(--accent);
-
       padding: 7px 12px;
       border-radius: 999px;
-
       font-size: 13px;
       font-weight: 700;
-
       margin-bottom: 22px;
     }
 
@@ -116,7 +115,6 @@
       font-size: clamp(42px, 6vw, 68px);
       line-height: 1.02;
       letter-spacing: -3px;
-
       max-width: 700px;
       margin-bottom: 22px;
     }
@@ -135,12 +133,9 @@
     .hero-card {
       background: var(--dark);
       color: white;
-
       border-radius: 24px;
       padding: 30px;
-
-      box-shadow:
-        0 25px 60px rgba(17,24,39,0.18);
+      box-shadow: 0 25px 60px rgba(17,24,39,0.18);
     }
 
     .hero-card-label {
@@ -158,8 +153,6 @@
 
     .mini-chart {
       height: 120px;
-      position: relative;
-
       display: flex;
       align-items: end;
       gap: 7px;
@@ -185,10 +178,8 @@
       margin-top: 20px;
       padding-top: 18px;
       border-top: 1px solid #374151;
-
       display: flex;
       justify-content: space-between;
-
       font-size: 13px;
     }
 
@@ -219,18 +210,16 @@
       color: var(--muted);
     }
 
-    /* INPUT CARD */
-
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 30px;
-
       box-shadow: 0 8px 30px rgba(15,23,42,0.04);
-
       margin-bottom: 25px;
     }
+
+    /* FORM */
 
     .grid {
       display: grid;
@@ -247,15 +236,11 @@
 
     input {
       width: 100%;
-
       padding: 14px 15px;
-
       border: 1px solid var(--border);
       border-radius: 10px;
-
       font-size: 16px;
       background: #fafafa;
-
       transition: 0.2s;
     }
 
@@ -263,28 +248,20 @@
       outline: none;
       border-color: var(--accent);
       background: white;
-
-      box-shadow:
-        0 0 0 3px rgba(37,99,235,0.1);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
     }
 
     button {
       width: 100%;
       margin-top: 25px;
-
       padding: 15px;
-
       border: none;
       border-radius: 11px;
-
       background: var(--accent);
       color: white;
-
       font-size: 16px;
       font-weight: 700;
-
       cursor: pointer;
-
       transition: 0.2s;
     }
 
@@ -303,10 +280,8 @@
 
     .result-box {
       padding: 22px;
-
       background: #fafafa;
       border: 1px solid var(--border);
-
       border-radius: 14px;
     }
 
@@ -322,16 +297,109 @@
       letter-spacing: -0.5px;
     }
 
+    /* PROJECTION */
+
+    .projection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .target-value {
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .chart {
+      height: 300px;
+      display: flex;
+      align-items: end;
+      gap: 12px;
+      padding: 20px 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chart-column {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chart-bar {
+      width: 70%;
+      max-width: 50px;
+      background: var(--accent);
+      border-radius: 7px 7px 0 0;
+      min-height: 4px;
+      transition: height 0.5s ease;
+    }
+
+    .chart-label {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* SCENARIOS */
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .scenario {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .scenario.highlighted {
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .scenario h3 {
+      margin-bottom: 8px;
+    }
+
+    .scenario-description {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .scenario-value {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .scenario-detail {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .difference {
+      margin-top: 15px;
+      color: var(--green);
+      font-weight: 800;
+    }
+
     /* FOOTER */
 
     footer {
       max-width: 1180px;
       margin: auto;
       padding: 35px 24px 50px;
-
       color: var(--muted);
       font-size: 13px;
-
       border-top: 1px solid var(--border);
     }
 
@@ -354,12 +422,26 @@
       }
 
       .grid,
-      .results {
+      .results,
+      .scenario-grid {
         grid-template-columns: 1fr;
+      }
+
+      .projection-header {
+        display: block;
+      }
+
+      .target-value {
+        margin-top: 15px;
+      }
+
+      .chart {
+        gap: 5px;
       }
     }
   </style>
 </head>
+
 
 <body>
 
@@ -371,10 +453,9 @@
     </div>
 
     <div class="nav-links">
-      <a href="#">Simulator</a>
-      <a href="#">Obiective</a>
-      <a href="#">Scenarii</a>
-      <a href="#">Despre</a>
+      <a href="#simulator">Simulator</a>
+      <a href="#projection">Proiecție</a>
+      <a href="#scenarios">Scenarii</a>
     </div>
 
   </div>
@@ -406,15 +487,14 @@
   <div class="hero-card">
 
     <div class="hero-card-label">
-      EXEMPLU DE PROIECȚIE
+      PROIECȚIA TA
     </div>
 
-    <div class="hero-number">
+    <div class="hero-number" id="heroProjection">
       1.247.000 RON
     </div>
 
     <div class="mini-chart">
-
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
@@ -424,19 +504,16 @@
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
-
     </div>
 
     <div class="hero-card-bottom">
-
-      <span>
+      <span id="heroAge">
         Obiectiv la 50 ani
       </span>
 
       <span class="positive">
-        +8,4% / an
+        Simulator activ
       </span>
-
     </div>
 
   </div>
@@ -446,59 +523,95 @@
 
 <main>
 
-  <div class="section-title">
+  <!-- INPUT -->
 
-    <h2>Începe cu situația ta actuală</h2>
+  <section id="simulator">
 
-    <p>
-      Datele introduse sunt folosite pentru a construi proiecția ta financiară.
-    </p>
+    <div class="section-title">
+      <h2>Începe cu situația ta actuală</h2>
 
-  </div>
+      <p>
+        Introdu câteva date pentru a construi proiecția financiară.
+      </p>
+    </div>
 
 
-  <section class="card">
+    <div class="card">
 
-    <div class="grid">
+      <div class="grid">
 
-      <div>
-        <label>Venit lunar (RON)</label>
-        <input type="number" value="10000">
+        <div>
+          <label for="income">Venit lunar (RON)</label>
+          <input id="income" type="number" value="10000" min="0">
+        </div>
+
+        <div>
+          <label for="expenses">Cheltuieli lunare (RON)</label>
+          <input id="expenses" type="number" value="6000" min="0">
+        </div>
+
+        <div>
+          <label for="savings">Economii existente (RON)</label>
+          <input id="savings" type="number" value="50000" min="0">
+        </div>
+
+        <div>
+          <label for="investments">Investiții existente (RON)</label>
+          <input id="investments" type="number" value="20000" min="0">
+        </div>
+
+        <div>
+          <label for="debts">Datorii / credite (RON)</label>
+          <input id="debts" type="number" value="30000" min="0">
+        </div>
+
+        <div>
+          <label for="monthlyInvestment">
+            Investiție lunară (RON)
+          </label>
+          <input id="monthlyInvestment" type="number" value="2000" min="0">
+        </div>
+
+        <div>
+          <label for="returnRate">
+            Randament anual estimat (%)
+          </label>
+          <input id="returnRate" type="number" value="7" min="0" step="0.1">
+        </div>
+
+        <div>
+          <label for="inflation">
+            Inflație anuală (%)
+          </label>
+          <input id="inflation" type="number" value="3" min="0" step="0.1">
+        </div>
+
+        <div>
+          <label for="age">
+            Vârsta actuală
+          </label>
+          <input id="age" type="number" value="30" min="1" max="100">
+        </div>
+
+        <div>
+          <label for="targetAge">
+            Vârsta țintă
+          </label>
+          <input id="targetAge" type="number" value="50" min="1" max="120">
+        </div>
+
       </div>
 
-      <div>
-        <label>Cheltuieli lunare (RON)</label>
-        <input type="number" value="6000">
-      </div>
-
-      <div>
-        <label>Economii existente (RON)</label>
-        <input type="number" value="50000">
-      </div>
-
-      <div>
-        <label>Investiții existente (RON)</label>
-        <input type="number" value="20000">
-      </div>
-
-      <div>
-        <label>Datorii / credite (RON)</label>
-        <input type="number" value="30000">
-      </div>
-
-      <div>
-        <label>Investiție lunară (RON)</label>
-        <input type="number" value="2000">
-      </div>
+      <button onclick="calculate()">
+        Calculează situația mea
+      </button>
 
     </div>
 
-    <button>
-      Continuă simularea
-    </button>
-
   </section>
 
+
+  <!-- SUMMARY -->
 
   <section class="card">
 
@@ -512,21 +625,138 @@
 
     </div>
 
+
     <div class="results">
 
       <div class="result-box">
         <small>Avere netă</small>
-        <strong>40.000 RON</strong>
+        <strong id="netWorth">0 RON</strong>
       </div>
 
       <div class="result-box">
         <small>Economisire lunară</small>
-        <strong>4.000 RON</strong>
+        <strong id="monthlySaving">0 RON</strong>
       </div>
 
       <div class="result-box">
         <small>Rata de economisire</small>
-        <strong>40%</strong>
+        <strong id="savingRate">0%</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Fond de siguranță</small>
+        <strong id="emergencyFund">0 luni</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Capital financiar</small>
+        <strong id="capital">0 RON</strong>
+      </div>
+
+      <div class="result-box">
+        <small>Datorii / venit anual</small>
+        <strong id="debtRatio">0%</strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- PROJECTION -->
+
+  <section id="projection" class="card">
+
+    <div class="projection-header">
+
+      <div class="section-title">
+
+        <h2>Evoluția averii</h2>
+
+        <p>
+          Proiecție bazată pe investiția lunară și randamentul estimat.
+        </p>
+
+      </div>
+
+      <div>
+
+        <div style="font-size:13px;color:#6b7280;">
+          La vârsta țintă
+        </div>
+
+        <div class="target-value" id="targetResult">
+          0 RON
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="chart" id="chart"></div>
+
+  </section>
+
+
+  <!-- SCENARIOS -->
+
+  <section id="scenarios" class="card">
+
+    <div class="section-title">
+
+      <h2>Ce se întâmplă dacă?</h2>
+
+      <p>
+        Vezi cât de mult poate conta o schimbare relativ mică în fiecare lună.
+      </p>
+
+    </div>
+
+
+    <div class="scenario-grid">
+
+      <div class="scenario">
+
+        <h3>Scenariul actual</h3>
+
+        <p class="scenario-description">
+          Continui să investești aceeași sumă în fiecare lună.
+        </p>
+
+        <div class="scenario-value" id="scenarioCurrent">
+          0 RON
+        </div>
+
+        <div class="scenario-detail">
+          Investiție lunară:
+          <strong id="currentMonthly">0 RON</strong>
+        </div>
+
+      </div>
+
+
+      <div class="scenario highlighted">
+
+        <h3>+1.000 RON / lună</h3>
+
+        <p class="scenario-description">
+          Crești investiția lunară cu 1.000 RON.
+        </p>
+
+        <div class="scenario-value" id="scenarioPlus">
+          0 RON
+        </div>
+
+        <div class="scenario-detail">
+          Investiție lunară:
+          <strong id="plusMonthly">0 RON</strong>
+        </div>
+
+        <div class="difference" id="difference">
+          +0 RON
+        </div>
+
       </div>
 
     </div>
@@ -546,6 +776,391 @@
   consultanță financiară.
 
 </footer>
+
+
+<script>
+
+  /*
+   * FORMATARE RON
+   */
+
+  function formatRON(number) {
+
+    return new Intl.NumberFormat("ro-RO", {
+      maximumFractionDigits: 0
+    }).format(Math.round(number)) + " RON";
+
+  }
+
+
+  /*
+   * CITIRE VALOARE INPUT
+   */
+
+  function getNumber(id) {
+
+    const element = document.getElementById(id);
+
+    return Number(element.value) || 0;
+
+  }
+
+
+  /*
+   * CALCUL INVESTIȚIE
+   *
+   * Folosim capitalizare lunară.
+   */
+
+  function calculateFutureValue(
+    initialCapital,
+    monthlyInvestment,
+    annualReturn,
+    years
+  ) {
+
+    const months = Math.max(0, Math.round(years * 12));
+
+    const monthlyRate =
+      annualReturn / 100 / 12;
+
+    let value = initialCapital;
+
+    for (let month = 0; month < months; month++) {
+
+      value =
+        value * (1 + monthlyRate);
+
+      value += monthlyInvestment;
+
+    }
+
+    return value;
+
+  }
+
+
+  /*
+   * CALCUL PRINCIPAL
+   */
+
+  function calculate() {
+
+    const income =
+      getNumber("income");
+
+    const expenses =
+      getNumber("expenses");
+
+    const savings =
+      getNumber("savings");
+
+    const investments =
+      getNumber("investments");
+
+    const debts =
+      getNumber("debts");
+
+    const monthlyInvestment =
+      getNumber("monthlyInvestment");
+
+    const returnRate =
+      getNumber("returnRate");
+
+    const age =
+      getNumber("age");
+
+    const targetAge =
+      getNumber("targetAge");
+
+
+    /*
+     * SITUAȚIA ACTUALĂ
+     */
+
+    const monthlySaving =
+      income - expenses;
+
+    const netWorth =
+      savings +
+      investments -
+      debts;
+
+    const savingRate =
+      income > 0
+        ? (monthlySaving / income) * 100
+        : 0;
+
+    const emergencyFund =
+      expenses > 0
+        ? savings / expenses
+        : 0;
+
+    const capital =
+      savings +
+      investments;
+
+    const debtRatio =
+      income > 0
+        ? (debts / (income * 12)) * 100
+        : 0;
+
+
+    document.getElementById("netWorth").textContent =
+      formatRON(netWorth);
+
+    document.getElementById("monthlySaving").textContent =
+      formatRON(monthlySaving);
+
+    document.getElementById("savingRate").textContent =
+      savingRate.toFixed(1) + "%";
+
+    document.getElementById("emergencyFund").textContent =
+      emergencyFund.toFixed(1) + " luni";
+
+    document.getElementById("capital").textContent =
+      formatRON(capital);
+
+    document.getElementById("debtRatio").textContent =
+      debtRatio.toFixed(1) + "%";
+
+
+    /*
+     * PERIOADA
+     */
+
+    const targetYears =
+      Math.max(0, targetAge - age);
+
+
+    /*
+     * PROIECȚIA PRINCIPALĂ
+     *
+     * Pentru moment folosim investițiile
+     * ca bază de capitalizare.
+     */
+
+    const target =
+      calculateFutureValue(
+        investments,
+        monthlyInvestment,
+        returnRate,
+        targetYears
+      );
+
+
+    document.getElementById("targetResult").textContent =
+      formatRON(target);
+
+    document.getElementById("heroProjection").textContent =
+      formatRON(target);
+
+    document.getElementById("heroAge").textContent =
+      "Obiectiv la " + targetAge + " ani";
+
+
+    /*
+     * SCENARIUL ACTUAL
+     */
+
+    const currentScenario =
+      calculateFutureValue(
+        investments,
+        monthlyInvestment,
+        returnRate,
+        targetYears
+      );
+
+
+    /*
+     * SCENARIUL +1000
+     */
+
+    const plusMonthly =
+      monthlyInvestment + 1000;
+
+    const plusScenario =
+      calculateFutureValue(
+        investments,
+        plusMonthly,
+        returnRate,
+        targetYears
+      );
+
+
+    const difference =
+      plusScenario -
+      currentScenario;
+
+
+    document.getElementById("scenarioCurrent").textContent =
+      formatRON(currentScenario);
+
+    document.getElementById("currentMonthly").textContent =
+      formatRON(monthlyInvestment);
+
+    document.getElementById("scenarioPlus").textContent =
+      formatRON(plusScenario);
+
+    document.getElementById("plusMonthly").textContent =
+      formatRON(plusMonthly);
+
+    document.getElementById("difference").textContent =
+      "+" + formatRON(difference);
+
+
+    /*
+     * GRAFIC
+     */
+
+    createChart(
+      investments,
+      monthlyInvestment,
+      returnRate,
+      age,
+      targetAge
+    );
+
+  }
+
+
+  /*
+   * CREARE GRAFIC
+   */
+
+  function createChart(
+    initialCapital,
+    monthlyInvestment,
+    annualReturn,
+    currentAge,
+    targetAge
+  ) {
+
+    const chart =
+      document.getElementById("chart");
+
+    chart.innerHTML = "";
+
+
+    const years =
+      Math.max(1, targetAge - currentAge);
+
+
+    /*
+     * Alegem maximum 10 puncte
+     * pentru ca graficul să rămână curat.
+     */
+
+    const points =
+      Math.min(10, years);
+
+
+    const interval =
+      years / points;
+
+
+    const values = [];
+
+
+    for (let i = 1; i <= points; i++) {
+
+      const year =
+        Math.round(interval * i);
+
+      const value =
+        calculateFutureValue(
+          initialCapital,
+          monthlyInvestment,
+          annualReturn,
+          year
+        );
+
+      values.push({
+        year: year,
+        value: value
+      });
+
+    }
+
+
+    const maxValue =
+      Math.max(...values.map(item => item.value), 1);
+
+
+    values.forEach(item => {
+
+      const column =
+        document.createElement("div");
+
+      column.className =
+        "chart-column";
+
+
+      const bar =
+        document.createElement("div");
+
+      bar.className =
+        "chart-bar";
+
+
+      const height =
+        Math.max(
+          5,
+          (item.value / maxValue) * 90
+        );
+
+
+      bar.style.height =
+        height + "%";
+
+
+      const label =
+        document.createElement("div");
+
+      label.className =
+        "chart-label";
+
+      label.textContent =
+        (currentAge + item.year) + " ani";
+
+
+      column.appendChild(bar);
+      column.appendChild(label);
+
+      chart.appendChild(column);
+
+    });
+
+  }
+
+
+  /*
+   * CALCULĂM AUTOMAT LA ÎNCĂRCAREA PAGINII
+   */
+
+  calculate();
+
+
+  /*
+   * RECALCULARE AUTOMATĂ
+   *
+   * Când utilizatorul schimbă orice valoare,
+   * rezultatele se actualizează.
+   */
+
+  const inputs =
+    document.querySelectorAll("input");
+
+  inputs.forEach(input => {
+
+    input.addEventListener(
+      "input",
+      calculate
+    );
+
+  });
+
+</script>
 
 </body>
 </html>
